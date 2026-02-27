@@ -2,80 +2,206 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>给最帅的男朋友 💖</title>
+<title>生日邀请函 🎂</title>
+
 <style>
-body {
-  text-align: center;
-  font-family: Arial;
-  background: linear-gradient(to bottom, #ffe6f0, #ffffff);
-  height: 100vh;
-  overflow: hidden;
-  margin: 0;
+body{
+    margin:0;
+    padding:0;
+    overflow:hidden;
+    text-align:center;
+    font-family:Arial, sans-serif;
+    color:white;
+    background:black;
 }
 
-h1 {
-  margin-top: 100px;
-  font-size: 28px;
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:-1;
 }
 
-button {
-  padding: 15px 30px;
-  font-size: 18px;
-  margin: 20px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  position: absolute;
+.container{
+    margin-top:40px;
+    position:relative;
+    z-index:2;
 }
 
-#yes {
-  background-color: #ff4d88;
-  color: white;
-  left: 35%;
-  top: 60%;
+img{
+    width:260px;
+    border-radius:20px;
+    box-shadow:0 0 40px rgba(255,182,193,0.8);
+    animation:float 5s ease-in-out infinite;
 }
 
-#no {
-  background-color: #999;
-  color: white;
-  left: 55%;
-  top: 60%;
+@keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-20px);}
+}
+
+h1{
+    font-size:28px;
+    min-height:40px;
+}
+
+button{
+    padding:14px 30px;
+    margin:20px;
+    border:none;
+    border-radius:40px;
+    font-size:18px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.yes{
+    background:#ff4b8b;
+    color:white;
+}
+
+.yes:active{
+    transform:scale(1.2);
+}
+
+.no{
+    background:white;
+    color:#ff4b8b;
+    position:absolute;
+}
+
+.heart{
+    position:fixed;
+    font-size:22px;
+    animation:fall 5s linear forwards;
+}
+
+@keyframes fall{
+    0%{transform:translateY(-20px);opacity:1;}
+    100%{transform:translateY(100vh);opacity:0;}
 }
 </style>
 </head>
 
 <body>
 
-<h1>
-宝宝 💖<br><br>
-愿不愿意来参加<br>
-你女朋友为你准备的生日惊喜呢？ 🎂✨
-</h1>
+<canvas id="space"></canvas>
 
-<button id="yes" onclick="yesClicked()">愿意 😍</button>
-<button id="no">不要 😏</button>
+<audio id="bgm" loop>
+    <source src="love.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container">
+    <h1 id="title"></h1>
+
+    <img src="photo.jpg">
+
+    <h2 id="timer"></h2>
+
+    <button class="yes" onclick="explode()">YES 我一定到 💖</button>
+    <button class="no" id="noBtn">NO 🙈</button>
+</div>
 
 <script>
-const noBtn = document.getElementById("no");
+// 🎵 点击后播放音乐
+document.body.addEventListener("click",function(){
+    document.getElementById("bgm").play();
+},{once:true});
 
-noBtn.addEventListener("mouseover", function() {
-  const x = Math.random() * (window.innerWidth - 100);
-  const y = Math.random() * (window.innerHeight - 50);
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
+// ✨ 打字机效果
+var message="这是一封属于你的生日邀请函 🎂✨";
+var i=0;
+function type(){
+    if(i<message.length){
+        document.getElementById("title").innerHTML+=message.charAt(i);
+        i++;
+        setTimeout(type,70);
+    }
+}
+type();
+
+// ⏳ 修改为生日日期
+var birthday=new Date("2026-03-01 00:00:00").getTime();
+
+setInterval(function(){
+    var now=new Date().getTime();
+    var distance=birthday-now;
+
+    if(distance<0){
+        document.getElementById("title").innerHTML="生日快乐 🎂 我最重要的人 ❤️";
+        document.getElementById("timer").innerHTML="今天是属于你的 ✨";
+        return;
+    }
+
+    var d=Math.floor(distance/(1000*60*60*24));
+    var h=Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+    var m=Math.floor((distance%(1000*60*60))/(1000*60));
+    var s=Math.floor((distance%(1000*60))/1000);
+
+    document.getElementById("timer").innerHTML=
+    "距离生日还有 ❤️<br>"+d+"天 "+h+"小时 "+m+"分 "+s+"秒";
+},1000);
+
+// 💖 爱心烟花
+function explode(){
+    for(let i=0;i<150;i++){
+        let heart=document.createElement("div");
+        heart.className="heart";
+        heart.innerHTML="💖";
+        heart.style.left=Math.random()*100+"vw";
+        heart.style.fontSize=(Math.random()*35+15)+"px";
+        heart.style.animationDuration=(Math.random()*3+2)+"s";
+        document.body.appendChild(heart);
+        setTimeout(()=>{heart.remove();},5000);
+    }
+}
+
+// 🙈 NO按钮乱跑
+var no=document.getElementById("noBtn");
+no.addEventListener("mouseover",function(){
+    no.style.top=Math.random()*80+"vh";
+    no.style.left=Math.random()*80+"vw";
 });
 
-function yesClicked() {
-  document.body.innerHTML = `
-    <h1 style="margin-top:150px; font-size:32px;">
-    🎉 太好了！！！<br><br>
-    生日惊喜时间：<br>
-    2026年3月15日 晚上7点<br><br>
-    地点：等你来了就知道 😏<br><br>
-    爱你一万年 ❤️
-    </h1>
-  `;
+// 🌌 银河星空 + 流星
+var canvas=document.getElementById("space");
+var ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+var stars=[];
+for(var i=0;i<300;i++){
+    stars.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        r:Math.random()*2
+    });
 }
+
+function drawStars(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="white";
+    stars.forEach(s=>{
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        ctx.fill();
+    });
+}
+
+setInterval(drawStars,40);
+
+// 🌠 流星
+setInterval(function(){
+    var x=Math.random()*canvas.width;
+    var y=0;
+    var len=100;
+    ctx.strokeStyle="white";
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+    ctx.lineTo(x+len,y+len);
+    ctx.stroke();
+},2000);
+
 </script>
 
 </body>
